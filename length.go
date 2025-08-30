@@ -19,6 +19,17 @@ var (
 	ErrLengthOutOfRange = NewError("validation_length_out_of_range", "the length must be between {{.min}} and {{.max}}")
 	// ErrLengthEmptyRequired is the error that returns in case of non-empty value.
 	ErrLengthEmptyRequired = NewError("validation_length_empty_required", "the value must be empty")
+
+	// ErrCountTooMany is the error that returns in case of too many items.
+	ErrCountTooMany = NewError("validation_count_too_many", "the count must be no more than {{.max}}")
+	// ErrCountTooFew is the error that returns in case of too few items.
+	ErrCountTooFew = NewError("validation_count_too_few", "the count must be no less than {{.min}}")
+	// ErrCountInvalid is the error that returns in case of an invalid count.
+	ErrCountInvalid = NewError("validation_count_invalid", "the count must be exactly {{.min}}")
+	// ErrCountOutOfRange is the error that returns in case of out of range count.
+	ErrCountOutOfRange = NewError("validation_count_out_of_range", "the count must be between {{.min}} and {{.max}}")
+	// ErrCountEmptyRequired is the error that returns in case of non-empty value.
+	ErrCountEmptyRequired = NewError("validation_count_empty_required", "the value must be empty")
 )
 
 // Length returns a validation rule that checks if a value's length is within the specified range.
@@ -27,6 +38,14 @@ var (
 // An empty value is considered valid. Use the Required rule to make sure a value is not empty.
 func Length(min, max int) LengthRule {
 	return LengthRule{min: min, max: max, err: buildLengthRuleError(min, max)}
+}
+
+// Count is an alias of Length, but the error messages are different in order to be more suitable for counting items.
+// If max is 0, it means there is no upper bound for the length.
+// This rule should only be used for validating strings, slices, maps, and arrays, but more suitable for counting items like slices, maps, and arrays.
+// An empty value is considered valid. Use the Required rule to make sure a value is not empty.
+func Count(min, max int) LengthRule {
+	return LengthRule{min: min, max: max, err: buildCountRuleError(min, max)}
 }
 
 // RuneLength returns a validation rule that checks if a string's rune length is within the specified range.
@@ -98,6 +117,24 @@ func buildLengthRuleError(min, max int) (err Error) {
 		}
 	} else {
 		err = ErrLengthEmptyRequired
+	}
+
+	return err.SetParams(map[string]interface{}{"min": min, "max": max})
+}
+
+func buildCountRuleError(min, max int) (err Error) {
+	if min == 0 && max > 0 {
+		err = ErrCountTooMany
+	} else if min > 0 && max == 0 {
+		err = ErrCountTooFew
+	} else if min > 0 && max > 0 {
+		if min == max {
+			err = ErrCountInvalid
+		} else {
+			err = ErrCountOutOfRange
+		}
+	} else {
+		err = ErrCountEmptyRequired
 	}
 
 	return err.SetParams(map[string]interface{}{"min": min, "max": max})

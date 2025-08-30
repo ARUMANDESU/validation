@@ -35,10 +35,60 @@ func TestLength(t *testing.T) {
 		{"t14", 2, 2, "ab", ""},
 		{"t15", 0, 0, "", ""},
 		{"t16", 0, 0, "ab", "the value must be empty"},
+		{"t17", 2, 4, []int{1, 2, 3}, ""},
+		{"t18", 2, 4, []int{1}, "the length must be between 2 and 4"},
+		{"t19", 2, 4, []int{1, 2, 3, 4, 5}, "the length must be between 2 and 4"},
+		{"t20", 2, 4, map[string]int{"a": 1, "b": 2}, ""},
+		{"t21", 2, 4, map[string]int{"a": 1}, "the length must be between 2 and 4"},
+		{"t22", 2, 4, map[string]int{"a": 1, "b": 2, "c": 3, "d": 4, "e": 5}, "the length must be between 2 and 4"},
+		{"t23", 2, 4, [3]int{1, 2, 3}, ""},
+		{"t24", 2, 4, [1]int{1}, "the length must be between 2 and 4"},
+		{"t25", 2, 4, [5]int{1, 2, 3, 4, 5}, "the length must be between 2 and 4"},
 	}
 
 	for _, test := range tests {
 		r := Length(test.min, test.max)
+		err := r.Validate(test.value)
+		assertError(t, test.err, err, test.tag)
+	}
+}
+
+func TestCount(t *testing.T) {
+	var v *string
+	tests := []struct {
+		tag      string
+		min, max int
+		value    interface{}
+		err      string
+	}{
+		{"t1", 2, 4, "abc", ""},
+		{"t2", 2, 4, "", ""},
+		{"t3", 2, 4, "abcdf", "the count must be between 2 and 4"},
+		{"t4", 0, 4, "ab", ""},
+		{"t5", 0, 4, "abcde", "the count must be no more than 4"},
+		{"t6", 2, 0, "ab", ""},
+		{"t7", 2, 0, "a", "the count must be no less than 2"},
+		{"t8", 2, 0, v, ""},
+		{"t10", 2, 4, sql.NullString{String: "abc", Valid: true}, ""},
+		{"t11", 2, 4, sql.NullString{String: "", Valid: true}, ""},
+		{"t12", 2, 4, &sql.NullString{String: "abc", Valid: true}, ""},
+		{"t13", 2, 2, "abcdf", "the count must be exactly 2"},
+		{"t14", 2, 2, "ab", ""},
+		{"t15", 0, 0, "", ""},
+		{"t16", 0, 0, "ab", "the value must be empty"},
+		{"t17", 2, 4, []string{"a", "b", "c"}, ""},
+		{"t18", 2, 4, []string{"a"}, "the count must be between 2 and 4"},
+		{"t19", 2, 4, map[string]int{"a": 1, "b": 2}, ""},
+		{"t20", 2, 4, map[string]int{"a": 1}, "the count must be between 2 and 4"},
+		{"t21", 2, 4, [3]int{1, 2, 3}, ""},
+		{"t22", 2, 4, [1]int{1}, "the count must be between 2 and 4"},
+		{"t23", 2, 4, []int{}, ""},
+		{"t24", 0, 4, []int{}, ""},
+		{"t25", 2, 0, []int{}, ""},
+	}
+
+	for _, test := range tests {
+		r := Count(test.min, test.max)
 		err := r.Validate(test.value)
 		assertError(t, test.err, err, test.tag)
 	}

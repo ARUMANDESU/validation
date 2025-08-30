@@ -8,8 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/invopop/validation"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/ARUMANDESU/validation"
 )
 
 func TestAll(t *testing.T) {
@@ -64,7 +65,13 @@ func TestAll(t *testing.T) {
 		{"CountryCode3", CountryCode3, "USA", "XYZ", "must be a valid three-letter country code"},
 		{"CurrencyCode", CurrencyCode, "USD", "USS", "must be valid ISO 4217 currency code"},
 		{"DialString", DialString, "localhost.local:1", "localhost.loc:100000", "must be a valid dial string"},
-		{"DataURI", DataURI, "data:image/png;base64,TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4=", "image/gif;base64,U3VzcGVuZGlzc2UgbGVjdHVzIGxlbw==", "must be a Base64-encoded data URI"},
+		{
+			"DataURI",
+			DataURI,
+			"data:image/png;base64,TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4=",
+			"image/gif;base64,U3VzcGVuZGlzc2UgbGVjdHVzIGxlbw==",
+			"must be a Base64-encoded data URI",
+		},
 		{"Base64", Base64, "TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4=", "image", "must be encoded in Base64"},
 		{"Multibyte", Multibyte, "ａｂｃ", "abc", "must contain multibyte characters"},
 		{"FullWidth", FullWidth, "３ー０", "abc", "must contain full-width characters"},

@@ -1,5 +1,67 @@
 # Upgrade Instructions
 
+## Upgrade to ARUMANDESU Fork
+
+This fork fixes a critical error code issue in the validation rules:
+
+**Error Code Fix**: `validation_is utf_letter_numeric` → `validation_is_utf_letter_numeric` (added missing underscore)
+
+### Breaking Change Notice
+
+If your code depends on checking the specific error code for UTF letter/numeric validation:
+
+```go
+// Old code that will break:
+if err.Code() == "validation_is utf_letter_numeric" {
+    // handle error
+}
+
+// Updated code:
+if err.Code() == "validation_is_utf_letter_numeric" {
+    // handle error  
+}
+```
+
+### I18n (Internationalization) Impact
+
+This fork was created specifically to fix i18n compatibility issues. The malformed error code `validation_is utf_letter_numeric` (missing underscore) was breaking internationalization systems that rely on consistent error codes for message translation lookups.
+
+If you're using i18n and were working around the broken error code:
+
+```go
+// Before (broken code structure):
+messages := map[string]string{
+    "validation_is utf_letter_numeric": "Must contain only letters and numbers", // Space instead of underscore
+}
+
+// After (fixed code structure):
+messages := map[string]string{
+    "validation_is_utf_letter_numeric": "Must contain only letters and numbers", // Proper underscore
+}
+```
+
+### Migration Steps
+
+1. Update import path:
+```bash
+go mod edit -replace github.com/invopop/validation=github.com/ARUMANDESU/validation@latest
+```
+
+2. Update imports in your code:
+```go
+// Old
+import "github.com/invopop/validation"
+import "github.com/invopop/validation/is"
+
+// New  
+import "github.com/ARUMANDESU/validation"
+import "github.com/ARUMANDESU/validation/is"
+```
+
+3. Update your i18n message keys to use the corrected error code with proper underscore formatting.
+
+---
+
 ## Upgrade from 3.x to 4.x
 
 If you are customizing the error messages of the following built-in validation rules, you may need to 

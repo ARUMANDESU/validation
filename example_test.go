@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/invopop/validation"
-	"github.com/invopop/validation/is"
+	"github.com/ARUMANDESU/validation"
+	"github.com/ARUMANDESU/validation/is"
 )
 
 type Address struct {

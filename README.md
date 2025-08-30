@@ -1,13 +1,8 @@
 # Go Validation
 
-[![Lint](https://github.com/invopop/validation/actions/workflows/lint.yaml/badge.svg)](https://github.com/invopop/validation/actions/workflows/lint.yaml)
-[![Test Go](https://github.com/invopop/validation/actions/workflows/test.yaml/badge.svg)](https://github.com/invopop/validation/actions/workflows/test.yaml)
-[![GoDoc](https://godoc.org/github.com/invopop/validation?status.png)](http://godoc.org/github.com/invopop/validation)
-[![Coverage Status](https://codecov.io/gh/invopop/validation/graph/badge.svg?token=Q3AEO8GZ8G)](https://codecov.io/gh/invopop/validation)
-[![Go Report](https://goreportcard.com/badge/github.com/invopop/validation)](https://goreportcard.com/report/github.com/invopop/validation)
-![Latest Tag](https://img.shields.io/github/v/tag/invopop/validation)
+NOTE: This is a fork of [invopop/validation](https://github.com/invopop/validation) which is a fork of the well known [ozzo-validation](https://github.com/go-ozzo/ozzo-validation) package which as of Feb 2023 doesn't appear to be under active maintenance for more than 2 years.
 
-NOTE: This is a fork of the well known [ozzo-validation](https://github.com/go-ozzo/ozzo-validation) package which as of Feb 2023 doesn't appear to be under active maintenance for more than 2 years. At [Invopop](https://invopop.com) we use this library extensively, so it only felt appropriate to be more pro-active. We'll do out best to respond to issues and review or merge any pull requests.
+I forked in order to fix the typo in the error code: `validation_is utf_letter_numeric` which should be `validation_is_utf_letter_numeric` (missing underscore between utf and letter). Because this was breaking my i18n code which relies on the error code to lookup the translated message.
 
 ## Description
 
@@ -26,11 +21,9 @@ It has the following features:
 
 For an example on how this library is used in an application, please refer to [go-rest-api](https://github.com/qiangxue/go-rest-api) which is a starter kit for building RESTful APIs in Go.
 
-For further examples, checkout the [GOBL project](https://github.com/invopop/gobl) which uses validation extensively.
-
 ## Requirements
 
-Latest supported Go (1.20) or later.
+Go 1.20 or later.
 
 ## Getting Started
 
@@ -43,7 +36,7 @@ or `validation.ValidateStruct()` to validate the value.
 Run the following command to install the package:
 
 ```
-go get github.com/invopop/validation
+go get github.com/ARUMANDESU/validation
 ```
 
 ### Validating a Simple Value
@@ -56,8 +49,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/invopop/validation"
-	"github.com/invopop/validation/is"
+	"github.com/ARUMANDESU/validation"
+	"github.com/ARUMANDESU/validation/is"
 )
 
 func main() {

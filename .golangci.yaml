@@ -1,31 +1,40 @@
-run:
-  timeout: "120s"
-
+version: "2"
 output:
   formats:
-    - format: "colored-line-number"
-
+    text:
+      path: stdout
 linters:
   enable:
-    - "gocyclo"
-    - "unconvert"
-    - "goimports"
-    - "govet"
-    - "misspell"
-    - "nakedret"
-    - "revive"
-    - "goconst"
-    - "unparam"
-    - "gofmt"
-
-linters-settings:
-  staticcheck:
-    # SAxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
-    # Default: ["*"]
-    checks: ["all"]
-
-  goconst:
-    ignore-tests: true
-
-issues:
-  exclude-use-default: false
+    - goconst
+    - gocyclo
+    - misspell
+    - nakedret
+    - revive
+    - unconvert
+    - unparam
+  settings:
+    staticcheck:
+      # SAxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
+      # Default: ["*"]
+      checks:
+        - all
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - goconst
+        path: (.+)_test\.go
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

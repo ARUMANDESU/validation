@@ -50,11 +50,11 @@ func TestFindStructField(t *testing.T) {
 	assert.NotNil(t, findStructField(v1, reflect.ValueOf(&s1.S1)))
 	assert.NotNil(t, findStructField(v1, reflect.ValueOf(&s1.Field21)))
 	assert.NotNil(t, findStructField(v1, reflect.ValueOf(&s1.Field22)))
-	assert.NotNil(t, findStructField(v1, reflect.ValueOf(&s1.Struct2.Field22)))
+	assert.NotNil(t, findStructField(v1, reflect.ValueOf(&s1.Field22)))
 	s2 := reflect.ValueOf(&s1.Struct2).Elem()
 	assert.NotNil(t, findStructField(s2, reflect.ValueOf(&s1.Field21)))
-	assert.NotNil(t, findStructField(s2, reflect.ValueOf(&s1.Struct2.Field21)))
-	assert.NotNil(t, findStructField(s2, reflect.ValueOf(&s1.Struct2.Field22)))
+	assert.NotNil(t, findStructField(s2, reflect.ValueOf(&s1.Field21)))
+	assert.NotNil(t, findStructField(s2, reflect.ValueOf(&s1.Field22)))
 	s3 := Struct3{
 		Struct2: &Struct2{},
 	}
@@ -87,7 +87,12 @@ func TestValidateStruct(t *testing.T) {
 		{"t2.4", &m1, []*FieldRules{Field(&m1.D, Length(0, 5))}, ""},
 		{"t2.5", &m1, []*FieldRules{Field(&m1.F, Length(0, 5))}, ""},
 		{"t2.6", &m1, []*FieldRules{Field(&m1.H, Each(&validateAbc{})), Field(&m1.I, Each(&validateAbc{}))}, ""},
-		{"t2.7", &m1, []*FieldRules{Field(&m1.H, Each(&validateXyz{})), Field(&m1.I, Each(&validateXyz{}))}, "H: (0: error xyz; 1: error xyz.); I: (foo: error xyz.)."},
+		{
+			"t2.7",
+			&m1,
+			[]*FieldRules{Field(&m1.H, Each(&validateXyz{})), Field(&m1.I, Each(&validateXyz{}))},
+			"H: (0: error xyz; 1: error xyz.); I: (foo: error xyz.).",
+		},
 		// non-struct pointer
 		{"t3.1", m1, []*FieldRules{}, ErrStructPointer.Error()},
 		{"t3.2", nil, []*FieldRules{}, ErrStructPointer.Error()},
@@ -168,7 +173,12 @@ func TestValidateStructWithContext(t *testing.T) {
 		{"t2.1", &m1, []*FieldRules{Field(&m1.G, Skip, &validateContextAbc{})}, ""},
 		{"t2.2", &m1, []*FieldRules{Field(&m1.G, &validateContextAbc{}, Skip)}, "g: error abc."},
 		// internal error
-		{"t3.1", &m2, []*FieldRules{Field(&m2.A, &validateContextAbc{}), Field(&m2.B, Required), Field(&m2.A, &validateInternalError{})}, "error internal"},
+		{
+			"t3.1",
+			&m2,
+			[]*FieldRules{Field(&m2.A, &validateContextAbc{}), Field(&m2.B, Required), Field(&m2.A, &validateInternalError{})},
+			"error internal",
+		},
 		// with custom validate methods
 		{"t4.1", &m6, []*FieldRules{Field(&m6.M4AP)}, ""},
 		{"t4.2", &m6, []*FieldRules{Field(&m6.M4AP, Each(NotNil))}, "M4AP: (0: is required.)."},
@@ -178,7 +188,7 @@ func TestValidateStructWithContext(t *testing.T) {
 		assertError(t, test.err, err, test.tag)
 	}
 
-	//embedded struct
+	// embedded struct
 	err := ValidateWithContext(context.Background(), &m3)
 	if assert.NotNil(t, err) {
 		assert.Equal(t, "A: error abc.", err.Error())

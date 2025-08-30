@@ -10,7 +10,8 @@ import (
 	"unicode"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/invopop/validation"
+
+	"github.com/ARUMANDESU/validation"
 )
 
 var (
@@ -33,7 +34,7 @@ var (
 	// ErrUTFDigit is the error that returns in case of an invalid utf digit value.
 	ErrUTFDigit = validation.NewError("validation_is_utf_digit", "must contain unicode decimal digits only")
 	// ErrUTFLetterNumeric is the error that returns in case of an invalid utf numeric or letter value.
-	ErrUTFLetterNumeric = validation.NewError("validation_is utf_letter_numeric", "must contain unicode letters and numbers only")
+	ErrUTFLetterNumeric = validation.NewError("validation_is_utf_letter_numeric", "must contain unicode letters and numbers only")
 	// ErrUTFNumeric is the error that returns in case of an invalid utf numeric value.
 	ErrUTFNumeric = validation.NewError("validation_is_utf_numeric", "must contain unicode number characters only")
 	// ErrLowerCase is the error that returns in case of an invalid lower case value.
